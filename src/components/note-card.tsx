@@ -4,15 +4,17 @@ import { ptBR } from 'date-fns/locale'
 import { X } from 'lucide-react'
 
 interface Note {
-  date: string
+  id: string
+  date: Date
   content: string
 }
 
 interface NoteCardProps {
   note: Note
+  onNoteDeleted: (id: string) => void
 }
 
-export function NoteCard({ note }: NoteCardProps) {
+export function NoteCard({ note, onNoteDeleted }: NoteCardProps) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -26,12 +28,12 @@ export function NoteCard({ note }: NoteCardProps) {
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 flex h-[60vh] w-full max-w-[640px] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded bg-slate-700 outline-none">
+        <Dialog.Content className="fixed inset-0 flex w-full flex-col overflow-hidden bg-slate-700 outline-none md:inset-auto md:left-1/2 md:top-1/2 md:h-[60vh] md:max-w-[640px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded">
           <Dialog.Close className="absolute right-0 top-0 bg-slate-800 p-1.5 text-slate-400 hover:text-slate-100">
             <X className="size-5" />
           </Dialog.Close>
           <div className="flex flex-1 flex-col gap-3 p-5">
-            <span className=" overflow-hidden text-sm font-medium text-slate-300">
+            <span className="overflow-hidden text-sm font-medium text-slate-300">
               {formatDistanceToNow(note.date, {
                 locale: ptBR,
                 addSuffix: true,
@@ -42,6 +44,7 @@ export function NoteCard({ note }: NoteCardProps) {
           <button
             type="button"
             className="group w-full bg-slate-800 py-4 text-center text-sm font-medium text-slate-300 outline-none"
+            onClick={() => onNoteDeleted(note.id)}
           >
             Deseja{' '}
             <span className="text-red-400 group-hover:underline">
